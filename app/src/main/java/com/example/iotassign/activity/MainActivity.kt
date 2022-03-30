@@ -2,13 +2,18 @@ package com.example.iotassign.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.iotassign.adapter.MyAdapter
-import com.example.iotassign.data.MyDataItem
-import com.example.iotassign.R
+import com.example.iotassign.adapter.ProductAdapter
+import com.example.iotassign.room.ProductTable
 import com.example.iotassign.api.ApiInterface
 import com.example.iotassign.databinding.ActivityMainBinding
+import com.example.iotassign.repository.ProductRepository
+import com.example.iotassign.room.ProductDatabase
+import com.example.iotassign.viewmodel.ProductViewModel
+import com.example.iotassign.viewmodel.ProductViewModelFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,25 +21,30 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
-//    lateinit var recyclerviewUsers: RecyclerView
+//    private lateinit var recyclerviewUsers: RecyclerView
     private lateinit var binding: ActivityMainBinding
-
-    lateinit var myAdapter: MyAdapter
-    lateinit var linearLayoutManager: LinearLayoutManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        recyclerview_users = findViewById(R.id.recyclerview_users)
-        binding.recyclerviewUsers.setHasFixedSize(true)
-        linearLayoutManager = LinearLayoutManager(this)
-        binding.recyclerviewUsers.layoutManager = linearLayoutManager
-        getMyData();
+        val productCrud = ProductDatabase.getProductDatabase(applicationContext).ProductCrud()
+        val productRepository = ProductRepository(productCrud)
+
+        val mainViewModel = ViewModelProvider(this , ProductViewModelFactory(productRepository)).get(
+            ProductViewModel::class.java)
+
+        val adapter = ProductAdapter()
+        binding.recyclerviewUsers.adapter = adapter
+        getAndSetMyData(mainViewModel)
+
+        mainViewModel.getProduct().observe(this) {
+            adapter.submitList(it)
+        }
     }
 
-    private fun getMyData() {
+    private fun getAndSetMyData(viewModel: ProductViewModel) {
         val retrofitBuilder = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl("https://makeup-api.herokuapp.com/")
@@ -43,18 +53,13 @@ class MainActivity : AppCompatActivity() {
 
         val retrofitData = retrofitBuilder.getData()
 
-        retrofitData.enqueue(object : Callback<List<MyDataItem>?> {
+        retrofitData.enqueue(object : Callback<List<ProductTable>?> {
             override fun onResponse(
-                call: Call<List<MyDataItem>?>,
-                response: Response<List<MyDataItem>?>
+                call: Call<List<ProductTable>?>,
+                response: Response<List<ProductTable>?>
             ) {
                 val responseBody =  response.body()!!
-
-                myAdapter = MyAdapter(baseContext , responseBody)
-                myAdapter.notifyDataSetChanged()
-                binding.recyclerviewUsers.adapter = myAdapter
-
-
+                viewModel.insertProduct(responseBody)
                 //to do: implement the recycler view
                 //we got to use these ones
                 //-name
@@ -67,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-            override fun onFailure(call: Call<List<MyDataItem>?>, t: Throwable) {
+            override fun onFailure(call: Call<List<ProductTable>?>, t: Throwable) {
 
             }
         })
