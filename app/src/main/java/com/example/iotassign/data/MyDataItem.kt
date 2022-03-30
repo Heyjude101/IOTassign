@@ -1,4 +1,4 @@
-package com.example.iotassign
+package com.example.iotassign.data
 
 data class MyDataItem(
     val brand: String,

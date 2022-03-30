@@ -1,5 +1,6 @@
-package com.example.iotassign
+package com.example.iotassign.api
 
+import com.example.iotassign.data.MyDataItem
 import retrofit2.Call
 import retrofit2.http.GET
 

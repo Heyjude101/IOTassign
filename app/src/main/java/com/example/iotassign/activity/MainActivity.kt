@@ -1,30 +1,36 @@
-package com.example.iotassign
+package com.example.iotassign.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.iotassign.adapter.MyAdapter
+import com.example.iotassign.data.MyDataItem
+import com.example.iotassign.R
+import com.example.iotassign.api.ApiInterface
+import com.example.iotassign.databinding.ActivityMainBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
-    lateinit var recyclerview_users: RecyclerView
+//    lateinit var recyclerviewUsers: RecyclerView
+    private lateinit var binding: ActivityMainBinding
 
     lateinit var myAdapter: MyAdapter
     lateinit var linearLayoutManager: LinearLayoutManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        recyclerview_users = findViewById(R.id.recyclerview_users)
-        recyclerview_users.setHasFixedSize(true)
+//        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+//        recyclerview_users = findViewById(R.id.recyclerview_users)
+        binding.recyclerviewUsers.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(this)
-        recyclerview_users.layoutManager = linearLayoutManager
+        binding.recyclerviewUsers.layoutManager = linearLayoutManager
         getMyData();
     }
 
@@ -46,16 +52,18 @@ class MainActivity : AppCompatActivity() {
 
                 myAdapter = MyAdapter(baseContext , responseBody)
                 myAdapter.notifyDataSetChanged()
-                recyclerview_users.adapter = myAdapter
+                binding.recyclerviewUsers.adapter = myAdapter
 
 
-                //to do: implement the recycler view with this for better display
+                //to do: implement the recycler view
                 //we got to use these ones
                 //-name
                 //-brand
                 //-price
                 //-image_link
                 //-description
+                //view binding done
+                //now let's do the room database and fetch and store..then we will see how we populate the recycler view
 
             }
 
