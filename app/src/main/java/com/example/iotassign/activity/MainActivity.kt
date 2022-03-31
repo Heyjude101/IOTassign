@@ -22,6 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var recyclerviewUsers: RecyclerView
+    val BASE_URL = "INSERT_URL_HERE"
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private fun getAndSetMyData(viewModel: ProductViewModel) {
         val retrofitBuilder = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://makeup-api.herokuapp.com/")
+            .baseUrl(BASE_URL)
             .build()
             .create(ApiInterface::class.java)
 

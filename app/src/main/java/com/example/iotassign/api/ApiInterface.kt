@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface ApiInterface {
-    @GET("api/v1/products.json?brand=maybelline")
+    @GET("INSERT_ENDPOINT_HERE")
     fun getData(): Call<List<ProductTable>>
 }
