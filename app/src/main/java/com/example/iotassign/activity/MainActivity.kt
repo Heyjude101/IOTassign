@@ -10,6 +10,7 @@ import com.example.iotassign.adapter.ProductAdapter
 import com.example.iotassign.room.ProductTable
 import com.example.iotassign.api.ApiInterface
 import com.example.iotassign.databinding.ActivityMainBinding
+import com.example.iotassign.extraUtil.constants.Companion.BASE_URL
 import com.example.iotassign.repository.ProductRepository
 import com.example.iotassign.room.ProductDatabase
 import com.example.iotassign.viewmodel.ProductViewModel
@@ -22,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 //    private lateinit var recyclerviewUsers: RecyclerView
-    val BASE_URL = "INSERT_URL_HERE"
+//    val BASE_URL = "https://makeup-api.herokuapp.com/"
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
